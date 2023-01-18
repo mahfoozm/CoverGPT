@@ -1,16 +1,15 @@
 import customtkinter
-import tex
+import gptex
 
 customtkinter.set_appearance_mode("System")  # Modes: "System" (standard), "Dark", "Light"
 customtkinter.set_default_color_theme("green")  # Themes: "blue" (standard), "green", "dark-blue"
-
 
 class App(customtkinter.CTk):
     def __init__(self):
         super().__init__()
 
         # configure window
-        self.title("GPT Cover Letter Writer")
+        self.title("CoverGPT")
         self.geometry(f"{800}x{480}")
         customtkinter.set_widget_scaling(1.2)
 
@@ -23,12 +22,14 @@ class App(customtkinter.CTk):
         self.sidebar_frame = customtkinter.CTkFrame(self, width=140, corner_radius=0)
         self.sidebar_frame.grid(row=0, column=0, rowspan=4, sticky="nsew")
         self.sidebar_frame.grid_rowconfigure(4, weight=1)
-        self.logo_label = customtkinter.CTkLabel(self.sidebar_frame, text="GPT-CL", font=customtkinter.CTkFont(size=20, weight="bold"))
+        self.logo_label = customtkinter.CTkLabel(self.sidebar_frame, text="CoverGPT", font=customtkinter.CTkFont(size=20, weight="bold"))
         self.logo_label.grid(row=0, column=0, padx=20, pady=(20, 10))
         self.sidebar_button_1 = customtkinter.CTkButton(self.sidebar_frame, command=self.home_button_event, text="Home")
         self.sidebar_button_1.grid(row=1, column=0, padx=20, pady=10)
         self.sidebar_button_2 = customtkinter.CTkButton(self.sidebar_frame, command=self.settings_button_event, text="Set Session Token")
         self.sidebar_button_2.grid(row=2, column=0, padx=20, pady=10)
+        self.sidebar_button_3 = customtkinter.CTkButton(self.sidebar_frame, command=self.settings_button_event, text="Name & Links")
+        self.sidebar_button_3.grid(row=3, column=0, padx=20, pady=10)
         self.appearance_mode_label = customtkinter.CTkLabel(self.sidebar_frame, text="Appearance Mode:", anchor="w")
         self.appearance_mode_label.grid(row=5, column=0, padx=20, pady=(10, 0))
         self.appearance_mode_optionemenu = customtkinter.CTkOptionMenu(self.sidebar_frame, values=["Light", "Dark", "System"],
@@ -42,10 +43,14 @@ class App(customtkinter.CTk):
 
         # create main entry and button
         self.entry = customtkinter.CTkEntry(self, placeholder_text="Enter job posting here...")
-        self.entry.grid(row=3, column=1, columnspan=2, padx=(20, 0), pady=(20, 20), sticky="nsew")
+        self.entry.grid(row=3, column=2, padx=(20, 0), pady=(20, 20), sticky="nsew")
 
         self.main_button_1 = customtkinter.CTkButton(master=self, text="Generate", fg_color="transparent", border_width=2, text_color=("gray10", "#DCE4EE"), command=self.send_job_listing)
         self.main_button_1.grid(row=3, column=3, padx=(20, 20), pady=(20, 20), sticky="nsew")
+
+        # create company entry
+        self.company_entry = customtkinter.CTkEntry(self, placeholder_text="Company name...")
+        self.company_entry.grid(row=3, column=1, padx=(20, 0), pady=(20, 20), sticky="nsew")
 
         # create textbox
         self.textbox = customtkinter.CTkTextbox(self, width=340)
@@ -67,8 +72,12 @@ class App(customtkinter.CTk):
         self.textbox.insert("0.0", "Log\n\n")
 
     def send_job_listing(self):
+        if self.company_entry.get() and self.entry.get() == "":
+            self.textbox.insert("end", "Please enter a job listing and company name\n")
+            return
         job_listing = self.entry.get()
-        tex.generateCoverLetter(job_listing)
+        company_name = self.company_entry.get()
+        gptex.generateCoverLetter(job_listing, company_name)
         self.textbox.insert("end", "Job Listing Sent\n")
 
     def home_button_event(self):
@@ -79,7 +88,7 @@ class App(customtkinter.CTk):
         dialog = customtkinter.CTkInputDialog(text="Type in your session token:", title="CTkInputDialog")
         session_token = dialog.get_input()
         print("Session Token:", session_token)
-        if session_token is not None:
+        if session_token != "":
             f = open("session_token.txt", "w")
             f.write(session_token)
             f.close()
