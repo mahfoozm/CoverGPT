@@ -1,5 +1,5 @@
 # CoverGPT
-Given a job posting, generate a cover letter using ChatGPT.
+Given a job posting, generate a cover letter using ChatGPT. (WIP)
 
 TO-DO:
 
