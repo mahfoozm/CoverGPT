@@ -33,6 +33,8 @@ A LaTeX template is provided, but you can use your own if you wish. If you choos
 - Company Address: #address1
 - City, State/Province, Zip/Postal Code: #address2
 
+Insert a \vspace{0.5cm} at the bottom of your template (this is where the paragraph body will be inserted).
+
 ### TO-DO:
 
 - Considering a CoverGPT web app, to simplify usage.
