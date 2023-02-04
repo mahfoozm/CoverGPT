@@ -44,4 +44,4 @@ Insert a \vspace{0.5cm} at the bottom of your template (this is where the paragr
 
 ### TO-DO:
 
-- considering a CoverGPT web app, to simplify usage
+- considering a CoverGPT web app, for simplified usage
