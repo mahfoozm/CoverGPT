@@ -37,4 +37,5 @@ Insert a \vspace{0.5cm} at the bottom of your template (this is where the paragr
 
 ### TO-DO:
 
-- Considering a CoverGPT web app, to simplify usage.
+- add requirements to a txt file, simplify installation
+- considering a CoverGPT web app, to simplify usage
