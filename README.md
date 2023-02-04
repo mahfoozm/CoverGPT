@@ -9,6 +9,12 @@ To use CoverGPT, you need a ChatGPT API key. To get one, make a ChatGPT account 
 ## Usage
 Before generating your first cover letter, ensure that you have set your API key and filled out your user information. If you want a more personalized cover letter, upload your resume. You can still generate a cover letter without uploading your resume; but it will be of much lower quality.
 
+## Requirements
+Requires the following python packages:
+tk, customtkinter, PyPDF2, revChatGPT
+
+You also need XeTeX installed on your system.
+
 ## Using your own cover letter template
 A LaTeX template is provided, but you can use your own if you wish. If you choose to use your own template, make the following replacements in your .tex file:
 - First Name: #firstName
