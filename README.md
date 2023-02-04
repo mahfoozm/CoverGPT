@@ -23,7 +23,7 @@ Before generating your first cover letter, ensure that you have set your API key
 To use CoverGPT, you need a ChatGPT API key. To get one, make a ChatGPT account and go to [this link](https://platform.openai.com/account/api-keys). Generate an API key and set it in CoverGPT.
 
 ## Example
-Example of a cover letter generated using CoverGPT (using the included cover letter template)
+Example of a cover letter generated using CoverGPT (using the included template)
 
 ![example](https://user-images.githubusercontent.com/95328615/216749052-9fab03dc-f02a-4523-967f-e07f382618b4.png)
 
