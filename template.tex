@@ -11,7 +11,7 @@
 \renewcommand{\headrulewidth}{0pt}
 \begin{document}
 
-\namesection{Mohammad}{Mahfooz}{ \urlstyle{same}\href{https://mohammadmahfooz.engineer}{mohammadmahfooz.engineer} | \href{mailto:mahfoozm@my.yorku.ca}{mahfoozm@my.yorku.ca} | (416)-993-8800 | \urlstyle{same}\href{https://github.com/mahfoozm}{Github} | \urlstyle{same}\href{https://www.linkedin.com/in/mohammadmahfooz/}{Linkedin}
+\namesection{#firstName}{#lastName}{ \urlstyle{same}\href{#websiteUrl}{#websiteUrl} | \href{mailto:#email}{#email} | #phoneNumber 
 }
 
 \hfill
@@ -19,23 +19,20 @@
 \companyname{\today}
 \companyname{#companyName}
 \companyaddress{
-123 Address St\\
-Toronto, ON M5V 3K1}
+#address1\\
+#address2}
 
 \end{minipage}
 \begin{minipage}[t]{0.49\textwidth} 
 \currentdate{\phantom{}}
 \end{minipage}
 
-\lettercontent{Dear Hiring Manager,}
-
-
 
 
 \vspace{0.5cm}
 
 \closing{Sincerely,\\[2ex]%
-  {\LARGE\calligra Mohammad Mahfooz}\\[2ex]
+  {\LARGE\calligra #fullName}\\[2ex]
 }
 
 \end{document}  
