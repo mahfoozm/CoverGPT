@@ -6,14 +6,21 @@ Generate a personalized & formatted cover letter for a job position, using your 
 ## API Key
 To use CoverGPT, you need a ChatGPT API key. To get one, make a ChatGPT account and go to [this link](https://platform.openai.com/account/api-keys). Generate an API key and set it in CoverGPT.
 
-## Usage
-Clone the repository. Before generating your first cover letter, ensure that you have set your API key and filled out your user information. If you want a more personalized cover letter, upload your resume. You can still generate a cover letter without uploading your resume; but it will be of much lower quality.
+## Installation
 
-## Requirements
-Requires the following python packages:
-tk, customtkinter, PyPDF2, revChatGPT
+> You will need [Python](https://www.python.org/downloads/) and a [TeX](https://www.tug.org/texlive/) distribution installed on your system.
 
-You also need XeTeX installed on your system.
+
+Install with this command:
+```
+pip install CoverGPT
+```
+Run with this command:
+```
+python3 -m CoverGPT
+```
+
+Before generating your first cover letter, ensure that you have set your API key and filled out your user information. If you want a more personalized cover letter, upload your resume. You can still generate a cover letter without uploading your resume; but it will be of much lower quality.
 
 ## Example
 Example of a cover letter generated using CoverGPT (using the included cover letter template)
@@ -37,5 +44,4 @@ Insert a \vspace{0.5cm} at the bottom of your template (this is where the paragr
 
 ### TO-DO:
 
-- add requirements to a txt file, to simplify installation
 - considering a CoverGPT web app, to simplify usage
