@@ -89,11 +89,15 @@ class App(customtkinter.CTk):
             self.textbox.insert("end", "Please enter a job listing and company name.\n")
             return
 
-        if not os.path.exists("api_key"):
+        script_dir = os.path.dirname(os.path.realpath(__file__))
+        api_key_file = os.path.join(script_dir, "api_key")
+        settings_file = os.path.join(script_dir, "settings")
+
+        if not os.path.exists(api_key_file):
             self.textbox.insert("end", "Please set your API key.\n")
             return
-    
-        if not os.path.exists("settings"):
+        
+        if not os.path.exists(settings_file):
             self.textbox.insert("end", "Please set your user info.\n")
             return
 
@@ -107,13 +111,19 @@ class App(customtkinter.CTk):
         gptex.generateCoverLetter(job_listing, company_name, address1, address2)
         self.progressbar_1.stop()
         self.textbox.insert("end", "Cover letter generated.\n")
+        current_dir = os.getcwd()
+        os.chdir(script_dir)
         if platform.system() == "Windows":
             subprocess.run(["start", "coverletter.pdf"], shell=True)
         else:
             subprocess.run(["open", "coverletter.pdf"])
+        os.chdir(current_dir)
+
+
 
     def home_button_event(self):
         self.textbox.insert("end", "this button might do something in the future idrk\n")
+
 
     def upload_resume(self):
         resume_path = tkinter.filedialog.askopenfilename(title="Select Resume", filetypes=(("pdf files", "*.pdf"), ("all files", "*.*")))
@@ -122,7 +132,9 @@ class App(customtkinter.CTk):
 
         resume = open(resume_path, "rb")
         reader = PdfReader(resume)
-        rawResume = open("rawresume", "w", encoding="UTF-8")
+        dir_path = os.path.dirname(os.path.realpath(__file__))
+        rawResume_path = os.path.join(dir_path, "rawresume")
+        rawResume = open(rawResume_path, "w", encoding="UTF-8")
 
         for page_num in range(len(reader.pages)):
             page = reader.pages[page_num]
@@ -132,14 +144,17 @@ class App(customtkinter.CTk):
         resume.close()
         rawResume.close()
 
+
     def api_key_event(self):
         dialog = customtkinter.CTkInputDialog(text="Type in your API key:", title="CTkInputDialog")
         api_key = dialog.get_input()
         if api_key != "":
-            f = open("api_key", "w")
+            script_dir = os.path.dirname(os.path.realpath(__file__))
+            f = open(os.path.join(script_dir, "api_key"), "w")
             f.write(api_key)
             f.close()
             self.textbox.insert("end", "API key set.\n")
+
 
     def settings_button_event(self):
         self.window = customtkinter.CTkToplevel(self)
@@ -176,32 +191,37 @@ class App(customtkinter.CTk):
         self.save_button.grid(row=5, column=0, columnspan=2, padx=(20, 20), pady=(20, 20), sticky="nsew")
 
         # read settings file and set text entries to the values in the file
-        if os.path.exists("settings"):
-            f = open("settings", "r")
-            self.firstName_entry.insert(0, f.readline().rstrip())
-            self.lastName_entry.insert(0, f.readline().rstrip())
-            self.websiteUrl_entry.insert(0, f.readline().rstrip())
-            self.email_entry.insert(0, f.readline().rstrip())
-            self.phoneNumber_entry.insert(0, f.readline().rstrip())
-            f.close()
+        file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "settings")
+        if os.path.exists(file_path):
+            with open(file_path, "r") as f:
+                self.firstName_entry.insert(0, f.readline().rstrip())
+                self.lastName_entry.insert(0, f.readline().rstrip())
+                self.websiteUrl_entry.insert(0, f.readline().rstrip())
+                self.email_entry.insert(0, f.readline().rstrip())
+                self.phoneNumber_entry.insert(0, f.readline().rstrip())
+
 
     def save_button_event(self):
-        f = open("settings", "w")
-        f.write(self.firstName_entry.get() + "\n")
-        f.write(self.lastName_entry.get() + "\n")
-        f.write(self.websiteUrl_entry.get() + "\n")
-        f.write(self.email_entry.get() + "\n")
-        f.write(self.phoneNumber_entry.get() + "\n")
-        f.close()
+        file_dir = os.path.dirname(os.path.abspath(__file__))
+        file_path = os.path.join(file_dir, "settings")
+        with open(file_path, "w") as f:
+            f.write(self.firstName_entry.get() + "\n")
+            f.write(self.lastName_entry.get() + "\n")
+            f.write(self.websiteUrl_entry.get() + "\n")
+            f.write(self.email_entry.get() + "\n")
+            f.write(self.phoneNumber_entry.get() + "\n")
         self.textbox.insert("end", "Settings applied.\n")
         self.window.destroy()
+
 
     def change_appearance_mode_event(self, new_appearance_mode: str):
         customtkinter.set_appearance_mode(new_appearance_mode)
 
+
     def change_scaling_event(self, new_scaling: str):
         new_scaling_float = int(new_scaling.replace("%", "")) / 100
         customtkinter.set_widget_scaling(new_scaling_float)
+
 
     def sidebar_button_event(self):
         print("sidebar_button click")
