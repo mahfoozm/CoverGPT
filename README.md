@@ -1,5 +1,5 @@
 # CoverGPT
-Generate a personalized & formatted cover letter for a job position, using your resume to add personalized details.
+Generate a personalized & formatted cover letter for a job position using your resume.
 
 ![image](https://user-images.githubusercontent.com/95328615/216740257-41b94c3d-3f1c-491d-ab5c-904d40a2033e.png)
 
