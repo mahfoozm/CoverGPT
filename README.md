@@ -8,7 +8,7 @@ Generate a personalized & formatted cover letter for a given job position utiliz
 > You will need [Python](https://www.python.org/downloads/) and a [TeX](https://www.tug.org/texlive/) distribution installed on your system.
 
 
-Install with this command:
+Install with this command (enter in command prompt/terminal):
 ```
 pip install CoverGPT
 ```
