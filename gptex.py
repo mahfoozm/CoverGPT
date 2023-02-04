@@ -33,9 +33,9 @@ def generateCoverLetter(job_listing, company_name, address1, address2):
     else:
         message = "Write a cover letter for this job position: " + company_name + " \n" + job_listing
 
-    print(message, 0.5)
+    print(message)
     chatbot = Chatbot(api_key)
-    response = chatbot.ask(message)
+    response = chatbot.ask(message, 0.5) # increasing temperature resulted in less coherent responses
 
     content = response["choices"][0]["text"]
     print(content)
