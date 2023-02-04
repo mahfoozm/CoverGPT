@@ -23,4 +23,4 @@ A LaTeX template is provided, but you can use your own if you wish. If you choos
 
 ### TO-DO:
 
-- Considering a CoverGPT web app.
+- Considering a CoverGPT web app, to simplify usage.
