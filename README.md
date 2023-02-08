@@ -1,4 +1,8 @@
 # CoverGPT
+
+[![PyPi](https://img.shields.io/pypi/v/CoverGPT.svg)](https://pypi.python.org/pypi/CoverGPT)
+[![Downloads](https://static.pepy.tech/badge/CoverGPT)](https://pypi.python.org/pypi/CoverGPT)
+
 Generate a personalized & formatted cover letter for a given job position utilizing your resume.
 
 ![image](https://user-images.githubusercontent.com/95328615/216740257-41b94c3d-3f1c-491d-ab5c-904d40a2033e.png)
