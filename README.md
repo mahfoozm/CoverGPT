@@ -5,7 +5,7 @@
 
 Generate a personalized & formatted cover letter for a given job position utilizing your resume.
 
-![image](https://user-images.githubusercontent.com/95328615/216740257-41b94c3d-3f1c-491d-ab5c-904d40a2033e.png)
+![CoverGPT](https://user-images.githubusercontent.com/95328615/218336746-7d12fbac-70a2-4125-b2a5-b93919d66169.png)
 
 ## Installation
 
