@@ -1,6 +1,6 @@
 import os, re, subprocess, platform
 import customtkinter
-import threading
+import threading, asyncio
 import tkinter.filedialog
 import gptex
 from PyPDF2 import PdfReader
@@ -9,6 +9,7 @@ customtkinter.set_appearance_mode("System")
 customtkinter.set_default_color_theme("green")
 
 class App(customtkinter.CTk):
+
     def __init__(self):
         super().__init__()
 
@@ -30,7 +31,7 @@ class App(customtkinter.CTk):
         self.logo_label.grid(row=0, column=0, padx=20, pady=(20, 10))
         self.sidebar_button_1 = customtkinter.CTkButton(self.sidebar_frame, command=self.home_button_event, text="Home")
         self.sidebar_button_1.grid(row=1, column=0, padx=20, pady=10)
-        self.sidebar_button_2 = customtkinter.CTkButton(self.sidebar_frame, command=self.api_key_event, text="Set API Key")
+        self.sidebar_button_2 = customtkinter.CTkButton(self.sidebar_frame, command=self.sign_in_event, text="Login")
         self.sidebar_button_2.grid(row=2, column=0, padx=20, pady=10)
         self.sidebar_button_3 = customtkinter.CTkButton(self.sidebar_frame, command=self.settings_button_event, text="User Info")
         self.sidebar_button_3.grid(row=3, column=0, padx=20, pady=10)
@@ -49,7 +50,7 @@ class App(customtkinter.CTk):
         self.entry = customtkinter.CTkEntry(self, placeholder_text="Full job posting...")
         self.entry.grid(row=3, column=2, padx=(20, 0), pady=(20, 20), sticky="nsew")
 
-        self.main_button_1 = customtkinter.CTkButton(master=self, text="Generate", fg_color="transparent", border_width=2, text_color=("gray10", "#DCE4EE"), command=lambda: threading.Thread(target=self.send_job_listing).start())
+        self.main_button_1 = customtkinter.CTkButton(master=self, text="Generate", fg_color="transparent", border_width=2, text_color=("gray10", "#DCE4EE"), command=lambda: threading.Thread(target=self.send_job_listing_threaded).start())
         self.main_button_1.grid(row=3, column=3, padx=(20, 20), pady=(20, 20), sticky="nsew")
 
         # create company entry
@@ -81,20 +82,23 @@ class App(customtkinter.CTk):
         self.scaling_optionemenu.set("120%")
         self.progressbar_1.configure(mode="indeterminnate")
         self.textbox.insert("0.0", "CoverGPT, a cover letter generator powered by GPT-3.\n\n")
-        self.textbox.insert("end", "Please set your API key and user info before generating (see github page).\n\n\n")
+        self.textbox.insert("end", "Please login and set your user info before generating (see github page).\n\n\n")
 
 
-    def send_job_listing(self):
+    def send_job_listing_threaded(self):
+        asyncio.run(self.send_job_listing())
+
+    async def send_job_listing(self):
         if self.company_entry.get() and self.entry.get() == "":
             self.textbox.insert("end", "Please enter a job listing and company name.\n")
             return
 
         script_dir = os.path.dirname(os.path.realpath(__file__))
-        api_key_file = os.path.join(script_dir, "api_key")
+        login_file = os.path.join(script_dir, "login")
         settings_file = os.path.join(script_dir, "settings")
 
-        if not os.path.exists(api_key_file):
-            self.textbox.insert("end", "Please set your API key.\n")
+        if not os.path.exists(login_file):
+            self.textbox.insert("end", "Please sign in.\n")
             return
         
         if not os.path.exists(settings_file):
@@ -107,10 +111,17 @@ class App(customtkinter.CTk):
         address2 = self.address2_entry.get()
 
         self.progressbar_1.start()
-        self.textbox.insert("end", "Generating cover letter...\n")
-        gptex.generateCoverLetter(job_listing, company_name, address1, address2)
+        self.textbox.insert("end", "\nGenerating cover letter...\n")
+
+        try:
+            await gptex.generateCoverLetter(job_listing, company_name, address1, address2)
+        except Exception as e:
+            self.textbox.insert("end", "\nError: " + str(e) + ". See terminal for more details.\n")
+            self.progressbar_1.stop()
+            return
+
         self.progressbar_1.stop()
-        self.textbox.insert("end", "Cover letter generated.\n")
+        self.textbox.insert("end", "\nCover letter for " + company_name + " generated.\n")
         current_dir = os.getcwd()
         os.chdir(script_dir)
         if platform.system() == "Windows":
@@ -118,7 +129,6 @@ class App(customtkinter.CTk):
         else:
             subprocess.run(["open", "coverletter.pdf"])
         os.chdir(current_dir)
-
 
 
     def home_button_event(self):
@@ -145,21 +155,34 @@ class App(customtkinter.CTk):
         rawResume.close()
 
 
-    def api_key_event(self):
-        dialog = customtkinter.CTkInputDialog(text="Type in your API key:", title="CTkInputDialog")
-        api_key = dialog.get_input()
-        if api_key != "":
-            script_dir = os.path.dirname(os.path.realpath(__file__))
-            f = open(os.path.join(script_dir, "api_key"), "w")
-            f.write(api_key)
-            f.close()
-            self.textbox.insert("end", "API key set.\n")
+    def sign_in_event(self):
+        self.window = customtkinter.CTkToplevel(self)
+        self.window.title("Sign In")
+        self.window.geometry("320x200")
+
+        self.userEmail_label = customtkinter.CTkLabel(self.window, text="Email:", anchor="w")
+        self.userEmail_label.grid(row=0, column=0, padx=(20, 0), pady=(20, 0), sticky="nsew")
+        self.userEmail_entry = customtkinter.CTkEntry(self.window)
+        self.userEmail_entry.grid(row=0, column=1, padx=(20, 20), pady=(20, 0), sticky="nsew")
+
+        self.userPass_label = customtkinter.CTkLabel(self.window, text="Password:", anchor="w")
+        self.userPass_label.grid(row=1, column=0, padx=(20, 0), pady=(20, 0), sticky="nsew")
+        self.userPass_entry = customtkinter.CTkEntry(self.window, show="*")
+        self.userPass_entry.grid(row=1, column=1, padx=(20, 20), pady=(20, 0), sticky="nsew")
+
+        self.save_button = customtkinter.CTkButton(self.window, text="Save", command=self.save_login_button_event)
+        self.save_button.grid(row=5, column=0, columnspan=2, padx=(20, 20), pady=(20, 20), sticky="nsew")
+
+        file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "login")
+        if os.path.exists(file_path):
+            with open(file_path, "r") as f:
+                self.userEmail_entry.insert(0, f.readline().rstrip())
 
 
     def settings_button_event(self):
         self.window = customtkinter.CTkToplevel(self)
         self.window.title("User Info")
-        self.window.geometry("350x400")
+        self.window.geometry("350x375")
 
         # create five text entries with labels to the left of them, add a save button to the bottom
         self.firstName_label = customtkinter.CTkLabel(self.window, text="First Name:", anchor="w")
@@ -187,7 +210,7 @@ class App(customtkinter.CTk):
         self.phoneNumber_entry = customtkinter.CTkEntry(self.window)
         self.phoneNumber_entry.grid(row=4, column=1, padx=(20, 20), pady=(20, 0), sticky="nsew")
 
-        self.save_button = customtkinter.CTkButton(self.window, text="Save", command=self.save_button_event)
+        self.save_button = customtkinter.CTkButton(self.window, text="Save", command=self.save_user_button_event)
         self.save_button.grid(row=5, column=0, columnspan=2, padx=(20, 20), pady=(20, 20), sticky="nsew")
 
         # read settings file and set text entries to the values in the file
@@ -201,7 +224,17 @@ class App(customtkinter.CTk):
                 self.phoneNumber_entry.insert(0, f.readline().rstrip())
 
 
-    def save_button_event(self):
+    def save_login_button_event(self):
+        file_dir = os.path.dirname(os.path.abspath(__file__))
+        file_path = os.path.join(file_dir, "login")
+        with open(file_path, "w") as f:
+            f.write(self.userEmail_entry.get() + "\n")
+            f.write(self.userPass_entry.get() + "\n")
+        self.textbox.insert("end", "Login info saved.\n")
+        self.window.destroy()
+
+
+    def save_user_button_event(self):
         file_dir = os.path.dirname(os.path.abspath(__file__))
         file_path = os.path.join(file_dir, "settings")
         with open(file_path, "w") as f:
@@ -210,7 +243,7 @@ class App(customtkinter.CTk):
             f.write(self.websiteUrl_entry.get() + "\n")
             f.write(self.email_entry.get() + "\n")
             f.write(self.phoneNumber_entry.get() + "\n")
-        self.textbox.insert("end", "Settings applied.\n")
+        self.textbox.insert("end", "User info saved.\n")
         self.window.destroy()
 
 
@@ -222,9 +255,6 @@ class App(customtkinter.CTk):
         new_scaling_float = int(new_scaling.replace("%", "")) / 100
         customtkinter.set_widget_scaling(new_scaling_float)
 
-
-    def sidebar_button_event(self):
-        print("sidebar_button click")
 
 if __name__ == "__main__":
     app = App()
