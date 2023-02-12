@@ -21,10 +21,10 @@ Run with this command:
 python3 -m CoverGPT
 ```
 
-Before generating your first cover letter, ensure that you have set your API key and filled out your user information. If you want a more personalized cover letter, upload your resume. You can still generate a cover letter without uploading your resume; but it will be of much lower quality.
+Before generating your first cover letter, ensure that you have logged in and filled out your user information. If you want a more personalized cover letter, upload your resume. You can still generate a cover letter without uploading your resume; but it will be of much lower quality.
 
-### API Key
-To use CoverGPT, you need a ChatGPT API key. To get one, make a ChatGPT account and go to [this link](https://platform.openai.com/account/api-keys). Generate an API key and set it in CoverGPT.
+### Login
+To use CoverGPT, you need a ChatGPT account. To make an account, head to [this link](https://chat.openai.com/chat) and click sign up. Then, login to CoverGPT with the same email/password you used to sign up for ChatGPT.
 
 ## Example
 Example of a cover letter generated using CoverGPT (using the included template)
