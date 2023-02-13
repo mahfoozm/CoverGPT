@@ -9,7 +9,7 @@ Generate a personalized & formatted cover letter for a given job position utiliz
 
 ## Installation
 
-> You will need [Python](https://www.python.org/downloads/) (with Tkinter) and a [TeX](https://www.tug.org/texlive/) distribution installed on your system.
+> You will need [Python](https://www.python.org/downloads/) (with Tcl/Tk) and a [TeX](https://www.tug.org/texlive/) distribution installed on your system.
 
 
 Install with this command (enter in command prompt/terminal):
