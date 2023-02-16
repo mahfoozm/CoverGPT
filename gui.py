@@ -1,6 +1,6 @@
 import os, re, subprocess, platform
 import customtkinter
-import threading, asyncio
+import threading
 import tkinter.filedialog
 import gptex
 from PyPDF2 import PdfReader
@@ -50,7 +50,7 @@ class App(customtkinter.CTk):
         self.entry = customtkinter.CTkEntry(self, placeholder_text="Full job posting...")
         self.entry.grid(row=3, column=2, padx=(20, 0), pady=(20, 20), sticky="nsew")
 
-        self.main_button_1 = customtkinter.CTkButton(master=self, text="Generate", fg_color="transparent", border_width=2, text_color=("gray10", "#DCE4EE"), command=lambda: threading.Thread(target=self.send_job_listing_threaded).start())
+        self.main_button_1 = customtkinter.CTkButton(master=self, text="Generate", fg_color="transparent", border_width=2, text_color=("gray10", "#DCE4EE"), command=lambda: threading.Thread(target=self.send_job_listing).start())
         self.main_button_1.grid(row=3, column=3, padx=(20, 20), pady=(20, 20), sticky="nsew")
 
         # create company entry
@@ -85,10 +85,7 @@ class App(customtkinter.CTk):
         self.textbox.insert("end", "Please login and set your user info before generating (see github page).\n\n\n")
 
 
-    def send_job_listing_threaded(self):
-        asyncio.run(self.send_job_listing())
-
-    async def send_job_listing(self):
+    def send_job_listing(self):
         if self.company_entry.get() and self.entry.get() == "":
             self.textbox.insert("end", "Please enter a job listing and company name.\n")
             return
@@ -114,7 +111,7 @@ class App(customtkinter.CTk):
         self.textbox.insert("end", "\nGenerating cover letter...\n")
 
         try:
-            await gptex.generateCoverLetter(job_listing, company_name, address1, address2)
+            gptex.generateCoverLetter(job_listing, company_name, address1, address2)
         except Exception as e:
             self.textbox.insert("end", "\nError: " + str(e) + ". See terminal for more details.\n")
             self.progressbar_1.stop()

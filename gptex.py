@@ -1,14 +1,14 @@
 import os, subprocess
 import fileinput
 import shutil
-from revChatGPT.V2 import Chatbot
+from revChatGPT.V1 import Chatbot
 
 def replace_value(line, field, value):
     if field in line:
         line = line.replace(field, value)
     return line
 
-async def generateCoverLetter(job_listing, company_name, address1, address2):
+def generateCoverLetter(job_listing, company_name, address1, address2):
     script_dir = os.path.dirname(os.path.realpath(__file__))
 
     # read user credentials from file
@@ -37,14 +37,18 @@ async def generateCoverLetter(job_listing, company_name, address1, address2):
         message = "Write a cover letter without a letter closing for this job position: " + company_name + " " + job_listing
 
     print(message)
-    chatbot = Chatbot(email=user_email, password=user_password)
-    
-    body = ""
-    async for content in chatbot.ask(message):
-        body += content["choices"][0]["text"].replace("<|im_end|>", "")
-    print(body)
+    chatbot = Chatbot(config={
+        "email": user_email,
+        "password": user_password
+    })
+    for data in chatbot.ask(
+    message
+    ):
+        content = data["message"]
 
-    paragraphs = body.split("\n\n")
+    print(content) 
+
+    paragraphs = content.split("\n\n")
 
     template_file = os.path.join(script_dir, "template.tex")
     coverletter_file = os.path.join(script_dir, "coverletter.tex")
