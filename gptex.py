@@ -64,16 +64,13 @@ def generateCoverLetter(job_listing, company_name, address1, address2):
             "#fullName": first_name + " " + last_name,
             "#address1": address1,
             "#address2": address2,
-            "#companyName": company_name,
+            "#companyName": company_name
         }
         for field, value in switch.items():
             line = replace_value(line, field, value)
         print(line, end='')
 
     for i in range(1, len(paragraphs) - 1):
-        # ignore sincerely when it is not in the same paragraph as applicant name (pretty often)
-        if "Sincerely," in paragraphs[i]:
-            continue
         file_path = os.path.join(script_dir, "coverletter.tex")
         for line in fileinput.input(file_path, inplace=True, backup=".bak"):
             if line.strip() == "\\vspace{0.5cm}":
