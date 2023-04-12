@@ -5,35 +5,40 @@
 
 Generate a personalized & formatted cover letter for a given job position utilizing your resume.
 
-![image](https://user-images.githubusercontent.com/95328615/216740257-41b94c3d-3f1c-491d-ab5c-904d40a2033e.png)
+![CoverGPT](https://user-images.githubusercontent.com/95328615/218336746-7d12fbac-70a2-4125-b2a5-b93919d66169.png)
 
 ## Installation
 
-> You will need [Python](https://www.python.org/downloads/) and a [TeX](https://www.tug.org/texlive/) distribution installed on your system.
-
+> You will need [Python 3.9+](https://www.python.org/downloads/) (with Tcl/Tk) and a [TeX](https://www.tug.org/texlive/) distribution installed on your system.
 
 Install with this command (enter in command prompt/terminal):
+
 ```
 pip install CoverGPT
 ```
+
 Run with this command:
+
 ```
 python3 -m CoverGPT
 ```
 
-Before generating your first cover letter, ensure that you have set your API key and filled out your user information. If you want a more personalized cover letter, upload your resume. You can still generate a cover letter without uploading your resume; but it will be of much lower quality.
+Before generating your first cover letter, ensure that you have logged in and filled out your user information. If you want a more personalized cover letter, upload your resume. You can still generate a cover letter without uploading your resume; but it will be of much lower quality.
 
-### API Key
-To use CoverGPT, you need a ChatGPT API key. To get one, make a ChatGPT account and go to [this link](https://platform.openai.com/account/api-keys). Generate an API key and set it in CoverGPT.
+### Login
+
+To use CoverGPT, you need a ChatGPT account. To make an account, head to [this link](https://chat.openai.com/chat) and click sign up. Then, login to CoverGPT using your access token (which can be found [here](https://chat.openai.com/api/auth/session), make sure you are logged into ChatGPT before heading to that link).
 
 ## Example
+
 Example of a cover letter generated using CoverGPT (using the included template)
 
 ![example](https://user-images.githubusercontent.com/95328615/216749052-9fab03dc-f02a-4523-967f-e07f382618b4.png)
 
-
 ## Using your own cover letter template
+
 A LaTeX template is provided, but you can use your own if you wish. If you choose to use your own template, make the following replacements in your .tex file:
+
 - First Name: #firstName
 - Last Name: #lastName
 - Website Link: #websiteUrl

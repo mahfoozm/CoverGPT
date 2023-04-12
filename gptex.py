@@ -38,7 +38,7 @@ def generateCoverLetter(job_listing, company_name, address1, address2):
 
     print(message)
     chatbot = Chatbot(config={
-        "access_token": user_email,
+        "access_token": user_email
         #"password": user_password
     })
     for data in chatbot.ask(
