@@ -1,21 +1,21 @@
 import os, subprocess
 import fileinput
 import shutil
-from revChatGPT.V2 import Chatbot
+from revChatGPT.V1 import Chatbot
 
 def replace_value(line, field, value):
     if field in line:
         line = line.replace(field, value)
     return line
 
-async def generateCoverLetter(job_listing, company_name, address1, address2):
+def generateCoverLetter(job_listing, company_name, address1, address2):
     script_dir = os.path.dirname(os.path.realpath(__file__))
 
     # read user credentials from file
     api_key_file = os.path.join(script_dir, "login")
     with open(api_key_file, "r") as f:
         user_email = f.readline().strip()
-        user_password = f.readline().strip()
+        #user_password = f.readline().strip()
 
     # read settings from file
     settings_file = os.path.join(script_dir, "settings")
@@ -37,14 +37,18 @@ async def generateCoverLetter(job_listing, company_name, address1, address2):
         message = "Write a cover letter without a letter closing for this job position: " + company_name + " " + job_listing
 
     print(message)
-    chatbot = Chatbot(email=user_email, password=user_password)
-    
-    body = ""
-    async for content in chatbot.ask(message):
-        body += content["choices"][0]["text"].replace("<|im_end|>", "")
-    print(body)
+    chatbot = Chatbot(config={
+        "access_token": user_email,
+        #"password": user_password
+    })
+    for data in chatbot.ask(
+    message
+    ):
+        content = data["message"]
 
-    paragraphs = body.split("\n\n")
+    print(content) 
+
+    paragraphs = content.split("\n\n")
 
     template_file = os.path.join(script_dir, "template.tex")
     coverletter_file = os.path.join(script_dir, "coverletter.tex")
@@ -67,6 +71,9 @@ async def generateCoverLetter(job_listing, company_name, address1, address2):
         print(line, end='')
 
     for i in range(1, len(paragraphs) - 1):
+        # ignore sincerely when it is not in the same paragraph as applicant name (pretty often)
+        if "Sincerely," in paragraphs[i]:
+            continue
         file_path = os.path.join(script_dir, "coverletter.tex")
         for line in fileinput.input(file_path, inplace=True, backup=".bak"):
             if line.strip() == "\\vspace{0.5cm}":

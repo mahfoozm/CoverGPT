@@ -1,6 +1,6 @@
 import os, re, subprocess, platform
 import customtkinter
-import threading, asyncio
+import threading
 import tkinter.filedialog
 import gptex
 from PyPDF2 import PdfReader
@@ -50,7 +50,7 @@ class App(customtkinter.CTk):
         self.entry = customtkinter.CTkEntry(self, placeholder_text="Full job posting...")
         self.entry.grid(row=3, column=2, padx=(20, 0), pady=(20, 20), sticky="nsew")
 
-        self.main_button_1 = customtkinter.CTkButton(master=self, text="Generate", fg_color="transparent", border_width=2, text_color=("gray10", "#DCE4EE"), command=lambda: threading.Thread(target=self.send_job_listing_threaded).start())
+        self.main_button_1 = customtkinter.CTkButton(master=self, text="Generate", fg_color="transparent", border_width=2, text_color=("gray10", "#DCE4EE"), command=lambda: threading.Thread(target=self.send_job_listing).start())
         self.main_button_1.grid(row=3, column=3, padx=(20, 20), pady=(20, 20), sticky="nsew")
 
         # create company entry
@@ -81,14 +81,11 @@ class App(customtkinter.CTk):
         self.appearance_mode_optionemenu.set("Dark")
         self.scaling_optionemenu.set("120%")
         self.progressbar_1.configure(mode="indeterminnate")
-        self.textbox.insert("0.0", "CoverGPT, a cover letter generator powered by GPT-3.\n\n")
+        self.textbox.insert("0.0", "CoverGPT, a cover letter generator powered by ChatGPT.\n\n")
         self.textbox.insert("end", "Please login and set your user info before generating (see github page).\n\n\n")
 
 
-    def send_job_listing_threaded(self):
-        asyncio.run(self.send_job_listing())
-
-    async def send_job_listing(self):
+    def send_job_listing(self):
         if self.company_entry.get() and self.entry.get() == "":
             self.textbox.insert("end", "Please enter a job listing and company name.\n")
             return
@@ -114,7 +111,7 @@ class App(customtkinter.CTk):
         self.textbox.insert("end", "\nGenerating cover letter...\n")
 
         try:
-            await gptex.generateCoverLetter(job_listing, company_name, address1, address2)
+            gptex.generateCoverLetter(job_listing, company_name, address1, address2)
         except Exception as e:
             self.textbox.insert("end", "\nError: " + str(e) + ". See terminal for more details.\n")
             self.progressbar_1.stop()
@@ -158,17 +155,18 @@ class App(customtkinter.CTk):
     def sign_in_event(self):
         self.window = customtkinter.CTkToplevel(self)
         self.window.title("Sign In")
-        self.window.geometry("320x200")
+        self.window.geometry("340x145")
 
-        self.userEmail_label = customtkinter.CTkLabel(self.window, text="Email:", anchor="w")
+        self.userEmail_label = customtkinter.CTkLabel(self.window, text="Access Token:", anchor="w")
         self.userEmail_label.grid(row=0, column=0, padx=(20, 0), pady=(20, 0), sticky="nsew")
         self.userEmail_entry = customtkinter.CTkEntry(self.window)
         self.userEmail_entry.grid(row=0, column=1, padx=(20, 20), pady=(20, 0), sticky="nsew")
 
-        self.userPass_label = customtkinter.CTkLabel(self.window, text="Password:", anchor="w")
-        self.userPass_label.grid(row=1, column=0, padx=(20, 0), pady=(20, 0), sticky="nsew")
-        self.userPass_entry = customtkinter.CTkEntry(self.window, show="*")
-        self.userPass_entry.grid(row=1, column=1, padx=(20, 20), pady=(20, 0), sticky="nsew")
+        ## email/pass auth broken, replaced with access token auth
+        #self.userPass_label = customtkinter.CTkLabel(self.window, text="Password:", anchor="w")
+        #self.userPass_label.grid(row=1, column=0, padx=(20, 0), pady=(20, 0), sticky="nsew")
+        #self.userPass_entry = customtkinter.CTkEntry(self.window, show="*")
+        #self.userPass_entry.grid(row=1, column=1, padx=(20, 20), pady=(20, 0), sticky="nsew")
 
         self.save_button = customtkinter.CTkButton(self.window, text="Save", command=self.save_login_button_event)
         self.save_button.grid(row=5, column=0, columnspan=2, padx=(20, 20), pady=(20, 20), sticky="nsew")
@@ -228,9 +226,8 @@ class App(customtkinter.CTk):
         file_dir = os.path.dirname(os.path.abspath(__file__))
         file_path = os.path.join(file_dir, "login")
         with open(file_path, "w") as f:
-            f.write(self.userEmail_entry.get() + "\n")
-            f.write(self.userPass_entry.get() + "\n")
-        self.textbox.insert("end", "Login info saved.\n")
+            f.write(self.userEmail_entry.get())
+        self.textbox.insert("end", "Access token saved.\n")
         self.window.destroy()
 
 
