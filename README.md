@@ -27,7 +27,7 @@ Before generating your first cover letter, ensure that you have logged in and fi
 
 ### Login
 
-To use CoverGPT, you need a ChatGPT account. To make an account, head to [this link](https://chat.openai.com/chat) and click sign up. Then, login to CoverGPT using your access token (which can be found [here](https://chat.openai.com/api/auth/session), make sure you are logged into ChatGPT before heading to that link).
+To use CoverGPT, you need a ChatGPT account. To make an account, head to [this link](https://chat.openai.com/chat) and click sign up. Then, login to CoverGPT using your access token (which can be found [here](https://chat.openai.com/api/auth/session), make sure you are logged into ChatGPT before heading to that link). Your access token changes every two weeks, and must be re-entered.
 
 ## Example
 
